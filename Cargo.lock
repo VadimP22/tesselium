@@ -214,6 +214,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "tesselium-core"
+version = "0.1.0"
+dependencies = [
+ "tesselium-raylib",
+]
+
+[[package]]
 name = "tesselium-raylib"
 version = "0.1.0"
 dependencies = [
