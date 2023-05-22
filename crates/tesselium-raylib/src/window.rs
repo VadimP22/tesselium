@@ -1,11 +1,8 @@
 use std::ffi::CString;
 
-use crate::{raylib, DrawLoopContext, InitializationHandler};
+use crate::{raylib, DrawHandler, InitializationHandler};
 
-pub struct Window {
-    draw_loop_ctx: DrawLoopContext,
-    initialization_ctx: InitializationHandler,
-}
+pub struct Window {}
 
 impl Window {
     pub fn new(width: i32, height: i32, target_fps: i32, name: &str) -> Self {
@@ -14,18 +11,23 @@ impl Window {
             raylib::SetTargetFPS(target_fps);
         }
 
-        return Window {
-            draw_loop_ctx: DrawLoopContext {},
-            initialization_ctx: InitializationHandler {},
-        };
+        return Window {};
     }
 
-    pub fn draw_loop(&mut self, mut loop_fn: impl FnMut(&mut DrawLoopContext)) {
+    pub fn get_initialization_handler(&mut self) -> InitializationHandler {
+        return InitializationHandler::create(self);
+    }
+
+    pub fn get_draw_handler(&mut self) -> DrawHandler {
+        return DrawHandler::create(self);
+    }
+
+    pub fn event_loop(&mut self, mut loop_fn: impl FnMut(&mut DrawHandler)) {
         unsafe {
             while !raylib::WindowShouldClose() {
-                raylib::BeginDrawing();
-                loop_fn(&mut self.draw_loop_ctx);
-                raylib::EndDrawing();
+                // Draw handler must be inside brackets because we want it to drop in the end of iteration.
+                let mut draw_handler = DrawHandler::create(self);
+                loop_fn(&mut draw_handler);
             }
         }
     }

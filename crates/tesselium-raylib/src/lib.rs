@@ -3,8 +3,8 @@ mod raylib;
 mod color;
 pub use color::*;
 
-mod draw_loop_context;
-pub use draw_loop_context::*;
+mod draw_handler;
+pub use draw_handler::*;
 
 mod initialization_handler;
 pub use initialization_handler::*;
